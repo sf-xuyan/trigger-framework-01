@@ -1,3 +1,3 @@
-trigger AccountTrigger on SOBJECT (before insert, after insert, before update, after update) {
-    new AccountTriggerHandler().run();
+trigger AccountTrigger on Account(before insert, after insert, before update, after update) {
+  new AccountTriggerHandler().run();
 }

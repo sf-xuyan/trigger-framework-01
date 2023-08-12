@@ -13,7 +13,7 @@ This trigger framework bundles a single **TriggerHandler** base class that you c
 
 The base class also provides a secondary role as a supervisor for Trigger execution. It acts like a watchdog, monitoring trigger activity and providing an api for controlling certain aspects of execution and control flow.
 
-But the most important part of this framework is that it's minimal and simple to use. 
+But the most important part of this framework is that it's minimal and simple to use.
 
 **Deploy to SFDX Scratch Org:**
 [![Deploy](https://deploy-to-sfdx.com/dist/assets/images/DeployToSFDX.svg)](https://deploy-to-sfdx.com)
@@ -26,14 +26,14 @@ But the most important part of this framework is that it's minimal and simple to
 To create a trigger handler, you simply need to create a class that inherits from **TriggerHandler.cls**. Here is an example for creating an Opportunity trigger handler.
 
 ```java
-public class OpportunityTriggerHandler extends TriggerHandler {
+public class OpportunityTriggerHandler extends TriggerHandler {}
 ```
 
 In your trigger handler, to add logic to any of the trigger contexts, you only need to override them in your trigger handler. Here is how we would add logic to a `beforeUpdate` trigger.
 
 ```java
 public class OpportunityTriggerHandler extends TriggerHandler {
-  
+
   public override void beforeUpdate() {
     for(Opportunity o : (List<Opportunity>) Trigger.new) {
       // do something
@@ -45,7 +45,7 @@ public class OpportunityTriggerHandler extends TriggerHandler {
 }
 ```
 
-**Note:** When referencing the Trigger statics within a class, SObjects are returned versus SObject subclasses like Opportunity, Account, etc. This means that you must cast when you reference them in your trigger handler. You could do this in your constructor if you wanted. 
+**Note:** When referencing the Trigger statics within a class, SObjects are returned versus SObject subclasses like Opportunity, Account, etc. This means that you must cast when you reference them in your trigger handler. You could do this in your constructor if you wanted.
 
 ```java
 public class OpportunityTriggerHandler extends TriggerHandler {
@@ -55,7 +55,7 @@ public class OpportunityTriggerHandler extends TriggerHandler {
   public OpportunityTriggerHandler() {
     this.newOppMap = (Map<Id, Opportunity>) Trigger.newMap;
   }
-  
+
   public override void afterUpdate() {
     //
   }
@@ -83,7 +83,7 @@ public class OpportunityTriggerHandler extends TriggerHandler {
   public OpportunityTriggerHandler() {
     this.setMaxLoopCount(1);
   }
-  
+
   public override void afterUpdate() {
     List<Opportunity> opps = [SELECT Id FROM Opportunity WHERE Id IN :Trigger.newMap.keySet()];
     update opps; // this will throw after this update
@@ -98,10 +98,10 @@ What if you want to tell other trigger handlers to halt execution? That's easy w
 
 ```java
 public class OpportunityTriggerHandler extends TriggerHandler {
-  
+
   public override void afterUpdate() {
     List<Opportunity> opps = [SELECT Id, AccountId FROM Opportunity WHERE Id IN :Trigger.newMap.keySet()];
-    
+
     Account acc = [SELECT Id, Name FROM Account WHERE Id = :opps.get(0).AccountId];
 
     TriggerHandler.bypass('AccountTriggerHandler');
@@ -141,10 +141,10 @@ TriggerHandler.clearAllBypasses();
 
 Here are all of the methods that you can override. All of the context possibilities are supported.
 
-* `beforeInsert()`
-* `beforeUpdate()`
-* `beforeDelete()`
-* `afterInsert()`
-* `afterUpdate()`
-* `afterDelete()`
-* `afterUndelete()`
+- `beforeInsert()`
+- `beforeUpdate()`
+- `beforeDelete()`
+- `afterInsert()`
+- `afterUpdate()`
+- `afterDelete()`
+- `afterUndelete()`
